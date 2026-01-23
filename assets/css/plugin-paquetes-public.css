@@ -1,0 +1,99 @@
+/**
+ * Estilos del área pública
+ * Plugin Paquetes
+ */
+
+.paquete-seguimiento-form {
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 5px;
+    margin: 20px 0;
+}
+
+.paquete-seguimiento-form form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.paquete-seguimiento-form label {
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.paquete-seguimiento-form input[type="text"] {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    font-size: 16px;
+}
+
+.paquete-seguimiento-form button {
+    padding: 10px 20px;
+    background-color: #0073aa;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 16px;
+    align-self: flex-start;
+}
+
+.paquete-seguimiento-form button:hover {
+    background-color: #005177;
+}
+
+.paquete-seguimiento {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 20px;
+    margin: 20px 0;
+}
+
+.paquete-info h3 {
+    margin-top: 0;
+    color: #333;
+    border-bottom: 2px solid #0073aa;
+    padding-bottom: 10px;
+}
+
+.paquete-info p {
+    margin: 10px 0;
+    line-height: 1.6;
+}
+
+.paquete-info strong {
+    color: #555;
+}
+
+.paquete-estado {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 3px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    background-color: #0073aa;
+    color: #fff;
+}
+
+.paquete-no-encontrado {
+    background: #fff3cd;
+    border: 1px solid #ffc107;
+    padding: 15px;
+    border-radius: 5px;
+    color: #856404;
+    margin: 20px 0;
+}
+
+@media (min-width: 768px) {
+    .paquete-seguimiento-form form {
+        flex-direction: row;
+        align-items: flex-end;
+    }
+
+    .paquete-seguimiento-form input[type="text"] {
+        flex: 1;
+    }
+}

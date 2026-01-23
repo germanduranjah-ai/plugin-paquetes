@@ -1,0 +1,49 @@
+/**
+ * Estilos del área de administración
+ * Plugin Paquetes
+ */
+
+.paquete-estado {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 3px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.status-pending {
+    background-color: #f0f0f1;
+    color: #50575e;
+}
+
+.status-transit {
+    background-color: #72aee6;
+    color: #fff;
+}
+
+.status-delivered {
+    background-color: #00a32a;
+    color: #fff;
+}
+
+.wrap h1 {
+    margin-bottom: 20px;
+}
+
+.wp-list-table th,
+.wp-list-table td {
+    vertical-align: middle;
+}
+
+.form-table th {
+    width: 200px;
+}
+
+.form-table input[type="text"],
+.form-table input[type="datetime-local"],
+.form-table select,
+.form-table textarea {
+    width: 100%;
+    max-width: 500px;
+}
