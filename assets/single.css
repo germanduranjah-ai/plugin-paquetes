@@ -1,0 +1,981 @@
+/* ======================================================
+   Single Paquete Template Styles
+   Based on onheaventravel.com design
+   ====================================================== */
+
+:root {
+  /* Bree font (Elementor custom font) */
+  --udpq-font-bree: "Bree", sans-serif;
+}
+
+.udpq-single {
+  font-family: var(--udpq-font-bree);
+  color: var(--udpq-text);
+}
+
+/* Brand tokens */
+.udpq-single{
+  --udpq-accent: #EE9C23;
+  --udpq-brand: #008183;
+}
+
+/* Icon helper (Font Awesome if enqueued) */
+.udpq-ico{display:inline-flex;align-items:center;justify-content:center;}
+.udpq-ico--list{min-width:18px;margin-right:10px;opacity:.92;}
+
+.udpq-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Hero Section */
+.udpq-single__hero {
+  position: relative;
+  min-height: 500px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 40px;
+  overflow: hidden;
+}
+
+.udpq-single__hero-image {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  z-index: 1;
+}
+
+.udpq-single__hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.6));
+  z-index: 2;
+}
+
+.udpq-single__hero-content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.udpq-single__hero-text {
+  margin-bottom: 30px;
+}
+
+.udpq-single__title {
+  font-size: 48px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 10px;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+.udpq-single__subtitle {
+  font-size: 24px;
+  color: #fff;
+  margin: 0;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+
+.udpq-single__hero-price {
+  background: rgba(255,255,255,0.95);
+  padding: 30px;
+  border-radius: var(--udpq-radius-lg);
+  margin: 30px auto;
+  max-width: 400px;
+  box-shadow: var(--udpq-shadow-lg);
+}
+
+.udpq-single__price-label {
+  font-size: 14px;
+  color: var(--udpq-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+.udpq-single__price-amount {
+  font-size: 42px;
+  font-weight: 700;
+  color: var(--udpq-primary);
+  margin-bottom: 8px;
+}
+
+.udpq-single__price-note {
+  font-size: 12px;
+  color: var(--udpq-muted);
+}
+
+.udpq-btn--reserve {
+  padding: 16px 40px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+/* ======================================================
+   Buttons (single template look)
+   Requested: Bree font, radius 30px, brand colors
+   ====================================================== */
+.udpq-single .udpq-btn{
+  font-family: var(--udpq-font-bree);
+  font-size: 1em;
+  border-radius: 30px;
+  padding: 14px 22px;
+  font-weight: 700;
+  background: var(--udpq-brand);
+  border: 1px solid var(--udpq-brand);
+  color: #fff;
+  backdrop-filter: none;
+}
+.udpq-single .udpq-btn:hover{filter:none;background: var(--udpq-accent);border-color: var(--udpq-accent);} 
+.udpq-single .udpq-btn:active{transform: translateY(1px);}
+
+.udpq-single .udpq-btn--ghost{
+  background: transparent;
+  color: var(--udpq-brand);
+  border-color: rgba(0,129,131,.35);
+}
+.udpq-single .udpq-btn--ghost:hover{background: rgba(0,129,131,.08);border-color: rgba(0,129,131,.45);color: var(--udpq-brand);} 
+
+.udpq-single .udpq-btn--primary{
+  background: var(--udpq-brand);
+  border-color: var(--udpq-brand);
+}
+
+/* Reserve CTA (orange) */
+.udpq-single .udpq-btn--reserve{
+  background: var(--udpq-accent);
+  border-color: var(--udpq-accent);
+  color: #111;
+}
+.udpq-single .udpq-btn--reserve:hover{background: var(--udpq-brand);border-color: var(--udpq-brand);color:#fff;}
+
+/* Main Content */
+.udpq-single__main {
+  display: grid;
+  grid-template-columns: 1fr 350px;
+  gap: 40px;
+  margin-bottom: 60px;
+}
+
+.udpq-single__content {
+  min-width: 0;
+}
+
+.udpq-single__section {
+  margin-bottom: 50px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid var(--udpq-border);
+}
+
+.udpq-single__section:last-child {
+  border-bottom: none;
+}
+
+.udpq-single__section-title {
+  font-family: var(--udpq-font-bree);
+  font-size: 28px;
+  font-weight: 600;
+  margin: 0 0 24px;
+  color: var(--udpq-text);
+}
+
+.udpq-single__section-title .udpq-ico{
+  color: var(--udpq-brand);
+  margin-right: 10px;
+  transform: translateY(1px);
+}
+
+.udpq-single__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.udpq-single__meta-item {
+  font-size: 14px;
+  color: var(--udpq-muted);
+  padding: 6px 12px;
+  background: #f5f5f5;
+  border-radius: 6px;
+}
+
+.udpq-single__content-text {
+  font-size: 16px;
+  line-height: 1.8;
+  color: var(--udpq-text);
+}
+
+.udpq-single__content-text p {
+  margin-bottom: 16px;
+}
+
+/* Details grid (backend fields) */
+.udpq-single__details{
+  display:grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap:16px;
+}
+
+.udpq-single__detail{
+  background:#f9f9f9;
+  border:1px solid var(--udpq-border);
+  border-radius: var(--udpq-radius-sm);
+  padding:14px 16px;
+  min-width:0;
+}
+
+.udpq-single__detail--full{
+  grid-column: 1 / -1;
+}
+
+.udpq-single__detail-label{
+  font-size:12px;
+  color: var(--udpq-muted);
+  text-transform: uppercase;
+  letter-spacing: .6px;
+  margin-bottom:6px;
+}
+
+.udpq-single__detail-value{
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--udpq-text);
+  word-break: break-word;
+}
+
+/* Services */
+.udpq-single__services {
+  margin-bottom: 24px;
+}
+
+.udpq-single__service-item {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+  margin-bottom: 16px;
+  background: #f9f9f9;
+  border-radius: var(--udpq-radius-sm);
+  border-left: 4px solid var(--udpq-primary);
+}
+
+.udpq-single__service-date {
+  min-width: 80px;
+  text-align: center;
+  padding: 12px;
+  background: #fff;
+  border-radius: 8px;
+}
+
+.udpq-single__service-day {
+  display: block;
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--udpq-primary);
+  line-height: 1;
+}
+
+.udpq-single__service-month {
+  display: block;
+  font-size: 12px;
+  text-transform: uppercase;
+  color: var(--udpq-muted);
+  margin-top: 4px;
+}
+
+.udpq-single__service-nights {
+  display: block;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--udpq-primary);
+  line-height: 1;
+}
+
+.udpq-single__service-label {
+  display: block;
+  font-size: 12px;
+  color: var(--udpq-muted);
+  margin-top: 4px;
+}
+
+.udpq-single__service-content {
+  flex: 1;
+}
+
+.udpq-single__service-title {
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--udpq-muted);
+  margin-bottom: 8px;
+}
+
+.udpq-single__service-detail {
+  font-size: 16px;
+}
+
+.udpq-single__service-airline {
+  margin-bottom: 8px;
+}
+
+.udpq-single__service-regimen {
+  display: inline-block;
+  padding: 4px 8px;
+  background: var(--udpq-accent);
+  color: #fff;
+  border-radius: 4px;
+  font-size: 12px;
+  margin-left: 8px;
+}
+
+.udpq-single__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.udpq-single__list li {
+  padding: 12px 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.udpq-single__list li:last-child {
+  border-bottom: none;
+}
+
+.udpq-single__list li::before { content: none; }
+
+/* Sidebar */
+.udpq-single__sidebar {
+  position: sticky;
+  top: 20px;
+  height: fit-content;
+}
+
+.udpq-single__summary {
+  background: #fff;
+  border: 1px solid var(--udpq-border);
+  border-radius: var(--udpq-radius-lg);
+  padding: 24px;
+  margin-bottom: 20px;
+  box-shadow: var(--udpq-shadow-sm);
+}
+
+.udpq-single__summary-title {
+    font-family: var(--udpq-font-bree);
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0 0 20px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid var(--udpq-primary);
+}
+
+.udpq-single__summary-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.udpq-single__summary-item:last-child {
+  border-bottom: none;
+}
+
+.udpq-single__summary-item span {
+  color: var(--udpq-muted);
+}
+
+.udpq-single__summary-item strong {
+  font-size: 18px;
+  color: var(--udpq-text);
+}
+
+.udpq-single__summary-price {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 20px 0;
+  margin-top: 20px;
+  border-top: 2px solid var(--udpq-primary);
+}
+
+.udpq-single__summary-price span {
+  font-size: 14px;
+  color: var(--udpq-muted);
+}
+
+.udpq-single__summary-price strong {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--udpq-primary);
+}
+
+/* Reservation Modal */
+.udpq-reserva-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s;
+}
+
+.udpq-reserva-modal.is-open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.udpq-reserva-modal__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(4px);
+}
+
+.udpq-reserva-modal__panel {
+  position: relative;
+  background: #fff;
+  border-radius: var(--udpq-radius-lg);
+  max-width: 600px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: var(--udpq-shadow-lg);
+  transform: scale(0.9);
+  transition: transform 0.3s;
+}
+
+.udpq-reserva-modal.is-open .udpq-reserva-modal__panel {
+  transform: scale(1);
+}
+
+.udpq-reserva-modal__close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: #f5f5f5;
+  border-radius: 50%;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.udpq-reserva-modal__close:hover {
+  background: #e0e0e0;
+}
+
+.udpq-reserva-modal__header {
+  padding: 32px 32px 24px;
+  border-bottom: 1px solid var(--udpq-border);
+}
+
+.udpq-reserva-modal__header h2 {
+  font-size: 28px;
+  font-weight: 600;
+  margin: 0 0 8px;
+}
+
+.udpq-reserva-modal__header p {
+  color: var(--udpq-muted);
+  margin: 0;
+}
+
+.udpq-reserva-modal__content {
+  padding: 32px;
+}
+
+/* Reservation Form */
+.udpq-reserva-form__section {
+  margin-bottom: 1px;
+}
+
+.udpq-reserva-form__label {
+  display: block;
+  font-weight: 900;
+  margin-bottom: 12px;
+  font-size: 14px;
+  letter-spacing: .2px;
+  font-family: var(--udpq-font-bree);
+}
+
+.udpq-reserva-form__note {
+  font-size: 13px;
+  color: var(--udpq-muted);
+  margin: -6px 0 12px;
+  line-height: 1.5;
+}
+
+.udpq-reserva-form__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.udpq-reserva-form__field {
+  display: flex;
+  flex-direction: column;
+}
+
+.udpq-reserva-form__field label {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 6px;
+  color: var(--udpq-text);
+}
+
+.udpq-reserva-form__field input {
+  padding: 12px;
+  border: 1px solid var(--udpq-border);
+  border-radius: 6px;
+  font-size: 14px;
+  transition: border-color 0.2s;
+}
+
+.udpq-reserva-form__field input:focus {
+  outline: none;
+  border-color: var(--udpq-primary);
+  box-shadow: 0 0 0 2px rgba(47, 133, 90, 0.1);
+}
+
+/* ======================================================
+   Reserva (modal) – estilos alineados al template Heaven
+   - usa tokens del single: --udpq-brand / --udpq-accent
+   - mantiene compatibilidad con .udpq-radio (public.css)
+   ====================================================== */
+
+.udpq-reserva-modal__panel{
+  /* Ensure modal (and form) keeps the same typography as the package template */
+  font-family: var(--udpq-font-bree);
+  border: 1px solid rgba(0,0,0,.06);
+}
+
+/* Apply Bree consistently inside the modal even when used via shortcode outside .udpq-single */
+.udpq-reserva-modal__panel *{
+  font-family: var(--udpq-font-bree);
+}
+
+.udpq-reserva-form__field input{
+  border-radius: 14px;
+  border-color: rgba(15,23,42,.16);
+  background: #fff;
+}
+
+.udpq-reserva-form__field input:focus{
+  border-color: var(--udpq-brand);
+  box-shadow: 0 0 0 3px rgba(0,129,131,.14);
+}
+
+/* Radios (opciones de precio): mejorar look + hover */
+.udpq-reserva-form .udpq-radio{
+  transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+}
+.udpq-reserva-form .udpq-radio:hover{
+  border-color: rgba(0,129,131,.28);
+  box-shadow: 0 10px 26px rgba(0,0,0,.06);
+  transform: translateY(-1px);
+}
+.udpq-reserva-form .udpq-radio.is-disabled:hover{
+  transform:none;
+  box-shadow:none;
+  border-color: var(--udpq-border);
+}
+
+/* Checkbox políticas */
+.udpq-reserva-form .udpq-check{
+  align-items:flex-start;
+}
+.udpq-reserva-form .udpq-check input{
+  margin-top: 3px;
+}
+
+/* Mensajes inline (para JS) */
+.udpq-reserva-form__notice{
+  display:none;
+  margin: 10px 0 0;
+  padding: 10px 12px;
+  border-radius: 14px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.udpq-reserva-form__notice.is-error{
+  display:block;
+  border:1px solid rgba(220,38,38,.25);
+  background: rgba(220,38,38,.06);
+  color:#991b1b;
+}
+.udpq-reserva-form__notice.is-success{
+  display:block;
+  border:1px solid rgba(0,129,131,.25);
+  background: rgba(0,129,131,.06);
+  color:#0f172a;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .udpq-single__main {
+    grid-template-columns: 1fr;
+  }
+
+  .udpq-single__sidebar {
+    position: static;
+  }
+
+  .udpq-single__title {
+    font-size: 36px;
+  }
+
+  .udpq-reserva-form__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .udpq-single__details{
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .udpq-single__hero {
+    min-height: 400px;
+  }
+
+  .udpq-single__title {
+    font-size: 28px;
+  }
+
+  .udpq-single__price-amount {
+    font-size: 32px;
+  }
+
+  .udpq-reserva-modal__panel {
+    width: 95%;
+    max-height: 95vh;
+  }
+
+  .udpq-reserva-modal__header,
+  .udpq-reserva-modal__content {
+    padding: 20px;
+  }
+
+  .udpq-single__details{
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* Opciones de reserva */
+.udpq-single__options{
+  display:grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap:12px;
+}
+.udpq-single__option{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:12px 14px;
+  border:1px solid rgba(0,0,0,.08);
+  border-radius:16px;
+  background:#fff;
+  box-shadow: var(--udpq-shadow-sm);
+  border-left: 4px solid var(--udpq-brand);
+}
+.udpq-single__option.is-disabled{
+  opacity:.55;
+}
+.udpq-single__option-label{
+  font-weight:600;
+}
+.udpq-single__option-price{
+  font-weight:700;
+  color: var(--udpq-brand);
+}
+
+.udpq-single__options-cta{margin-top:18px;display:flex;justify-content:flex-start;}
+
+@media (max-width: 720px){
+  .udpq-single__options{grid-template-columns: 1fr;}
+}
+
+
+/* ======================================================
+   Premium UI upgrades
+   ====================================================== */
+.udpq-single__section{
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.06);
+  padding: 22px;
+  margin: 0px 0px 20px 0px;
+}
+
+.udpq-single__section-title{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  letter-spacing:.2px;
+}
+
+.udpq-single__details{
+  display:grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 12px;
+}
+@media (max-width: 980px){
+  .udpq-single__details{grid-template-columns: repeat(2, minmax(0,1fr));}
+}
+@media (max-width: 640px){
+  .udpq-single__details{grid-template-columns: 1fr;}
+}
+
+.udpq-single__detail{
+  position: relative;
+  border: 1px solid rgba(0,0,0,.06);
+  border-radius: 16px;
+  padding: 14px 14px 14px 52px;
+  background: linear-gradient(180deg, rgba(0,129,131,.06), rgba(238,156,35,.02));
+}
+
+.udpq-single__detail-icon{
+  position:absolute;
+  left: 14px;
+  top: 14px;
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  background: rgba(0,129,131,.12);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color: var(--udpq-brand);
+  font-size: 14px;
+}
+
+.udpq-single__detail-label{
+  font-size: 12px;
+  opacity: .75;
+  margin-bottom: 6px;
+}
+.udpq-single__detail-value{
+  font-size: 15px;
+  font-weight: 400;
+}
+
+.udpq-cards-grid{
+  display:grid;
+  grid-template-columns: repeat(3, minmax(0,1fr));
+  gap: 14px;
+}
+@media (max-width: 980px){
+  .udpq-cards-grid{grid-template-columns: repeat(2, minmax(0,1fr));}
+}
+@media (max-width: 640px){
+  .udpq-cards-grid{grid-template-columns: 1fr;}
+}
+
+.udpq-card{
+  border: 1px solid rgba(0,0,0,.06);
+  border-radius: 18px;
+  padding: 16px;
+  background: #fff;
+  box-shadow: 0 10px 30px rgba(0,0,0,.05);
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+.udpq-card:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 14px 36px rgba(0,0,0,.07);
+}
+
+.udpq-card--option{
+  border-left: 6px solid var(--udpq-brand);
+}
+.udpq-card__title{
+  font-weight: 800;
+  margin: 0 0 6px;
+}
+.udpq-card__text{
+  opacity: .85;
+  margin: 0;
+}
+
+.udpq-list li{
+  display:flex;
+  gap:10px;
+  align-items:flex-start;
+}
+.udpq-list li i{
+  margin-top: 2px;
+  color: var(--udpq-brand);
+}
+
+/* Sticky CTA */
+.udpq-sticky-cta{
+  display:none;
+}
+@media (max-width: 768px){
+  .udpq-sticky-cta{
+    display:block;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 12px 14px;
+    background: rgba(255,255,255,.92);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(0,0,0,.08);
+    z-index: 9999;
+  }
+  .udpq-btn--sticky{
+    width: 100%;
+    padding: 14px 18px;
+    font-size: 1.05em;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+  }
+  /* give space so content not hidden behind sticky */
+  .udpq-single{ padding-bottom: 80px; }
+}
+
+
+/* ======================================================
+   Layout tweaks (premium stack)
+   - Remove grids for Servicios incluidos + Opciones de reserva
+   ====================================================== */
+
+/* Servicios incluidos: stack vertical (like previous version) */
+.udpq-single__services.udpq-cards-grid{
+  display:flex !important;
+  flex-direction:column !important;
+  gap:16px;
+}
+.udpq-single__services .udpq-single__service-item{
+  margin-bottom:0 !important;
+  width:100%;
+}
+
+/* Opciones de reserva: stack vertical list (no grid) */
+.udpq-single__options{
+  display:flex !important;
+  flex-direction:column !important;
+  gap:14px;
+}
+
+/* Option card as horizontal row */
+.udpq-single__options .udpq-card--option.udpq-single__option{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:18px 22px;
+  border-radius:18px;
+  background:#fff;
+  box-shadow:0 6px 18px rgba(0,0,0,.06);
+  border-left:6px solid var(--udpq-brand);
+}
+
+.udpq-single__options .udpq-single__option-label{
+  font-weight:600;
+}
+
+.udpq-single__options .udpq-single__option-price{
+  font-size:1.1em;
+  font-weight:700;
+  color: var(--udpq-brand);
+}
+
+/* Disabled option */
+.udpq-single__options .udpq-single__option.is-disabled{
+  opacity:.5;
+  filter: grayscale(0.2);
+}
+
+/* Make sure any legacy grid helpers don't interfere */
+.udpq-single__options.udpq-cards-grid,
+.udpq-single__options.udpq-cards-grid--options{
+  display:flex !important;
+  flex-direction:column !important;
+}
+
+/* ======================================================
+   Opciones de reserva (stack limpio)
+   - Este template usa: .udpq-single__options.udpq-options-stack
+   - Evita "cards" anidadas y asegura filas simples (label + precio)
+====================================================== */
+.udpq-single__options.udpq-options-stack{
+  display:flex !important;
+  flex-direction:column !important;
+  gap:14px !important;
+}
+
+.udpq-single__options.udpq-options-stack .udpq-single__option{
+  display:flex !important;
+  justify-content:space-between !important;
+  align-items:center !important;
+  gap:16px;
+  padding:16px 18px;
+  border-radius:18px;
+  background:#fff;
+  border:1px solid rgba(0,0,0,.08);
+  box-shadow:0 6px 18px rgba(0,0,0,.06);
+  border-left:6px solid var(--udpq-brand);
+  transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+}
+
+.udpq-single__options.udpq-options-stack .udpq-single__option:hover{
+  transform: translateY(-1px);
+  box-shadow:0 10px 26px rgba(0,0,0,.10);
+  border-color: rgba(0,129,131,.25);
+}
+
+.udpq-single__options.udpq-options-stack .udpq-single__option-label,
+.udpq-single__options.udpq-options-stack .udpq-single__option-price{
+  display:block;
+}
+
+.udpq-single__options.udpq-options-stack .udpq-single__option-label{
+  font-weight:400;
+}
+
+.udpq-single__options.udpq-options-stack .udpq-single__option-price{
+  font-size:1.1em;
+  font-weight:800;
+  color: var(--udpq-brand);
+  white-space:nowrap;
+}
+
+@media (max-width: 640px){
+  .udpq-single__options.udpq-options-stack .udpq-single__option{
+    align-items:flex-start;
+  }
+  .udpq-single__options.udpq-options-stack .udpq-single__option-price{
+    width:100%;
+    text-align: right;
+  }
+  
+.udpq-radio__desc {
+    font-size: 12px;
+    width: 100%;
+    line-height: 1.1em;
+}
+}
