@@ -402,8 +402,7 @@ final class UDPAQUETES_Shortcodes {
             wp_enqueue_script('udpq-carousel');
         }
 
-        // NOTE: In this plugin branch, "Destino" is stored as a plain text meta (META_DESTINO).
-        // Some older builds also had a taxonomy. To avoid empty results, we filter by meta.
+        // "Destino" is managed as a taxonomy (ud_destino). Fallback to meta only if taxonomy is missing.
         $tax_query = [];
 
         $meta_query = [];
@@ -454,29 +453,39 @@ final class UDPAQUETES_Shortcodes {
         }
 
         // Text filters (contains)
-        // Destino puede ser una lista separada por comas: "Mexico,Punta Cana,Cancun"
+        // Destino puede ser una lista separada por comas: "mexico,punta-cana,cancun"
         if (!empty($atts['destino'])) {
             $destinos = array_filter(array_map('trim', explode(',', (string) $atts['destino'])));
-            if (count($destinos) > 1) {
-                // Múltiples destinos: usar OR
-                $destino_queries = [];
-                foreach ($destinos as $dest) {
-                    $destino_queries[] = [
+            $destinos = array_map('sanitize_title', $destinos);
+
+            if (!empty($destinos) && taxonomy_exists(UDPAQUETES_CPT::TAX_DESTINO)) {
+                $tax_query[] = [
+                    'taxonomy' => UDPAQUETES_CPT::TAX_DESTINO,
+                    'field' => 'slug',
+                    'terms' => $destinos,
+                    'operator' => 'IN',
+                ];
+            } elseif (!empty($destinos)) {
+                // Fallback: meta query when taxonomy isn't available.
+                if (count($destinos) > 1) {
+                    $destino_queries = [];
+                    foreach ($destinos as $dest) {
+                        $destino_queries[] = [
+                            'key' => UDPAQUETES_Metaboxes::META_DESTINO,
+                            'value' => $dest,
+                            'compare' => 'LIKE',
+                        ];
+                    }
+                    $destino_query = ['relation' => 'OR'];
+                    $destino_query = array_merge($destino_query, $destino_queries);
+                    $meta_query[] = $destino_query;
+                } else {
+                    $meta_query[] = [
                         'key' => UDPAQUETES_Metaboxes::META_DESTINO,
-                        'value' => sanitize_text_field($dest),
+                        'value' => $destinos[0],
                         'compare' => 'LIKE',
                     ];
                 }
-                $destino_query = ['relation' => 'OR'];
-                $destino_query = array_merge($destino_query, $destino_queries);
-                $meta_query[] = $destino_query;
-            } elseif (count($destinos) === 1) {
-                // Un solo destino
-                $meta_query[] = [
-                    'key' => UDPAQUETES_Metaboxes::META_DESTINO,
-                    'value' => sanitize_text_field($destinos[0]),
-                    'compare' => 'LIKE',
-                ];
             }
         }
         if (!empty($atts['hotel'])) {
