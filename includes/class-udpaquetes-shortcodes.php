@@ -661,6 +661,9 @@ final class UDPAQUETES_Shortcodes {
                 [$min_price, $currency] = self::get_price_from_meta($id);
                 $destino = get_post_meta($id, UDPAQUETES_Metaboxes::META_DESTINO, true);
                 $noches = get_post_meta($id, UDPAQUETES_Metaboxes::META_NOCHES, true);
+                $thumb_url = has_post_thumbnail()
+                    ? get_the_post_thumbnail_url($id, 'large')
+                    : trim((string) get_post_meta($id, '_udpq_external_image_url', true));
 
                 // Compatibilidad / hardening:
                 // En builds anteriores existían metadatos como "servicios"/"beneficios".
@@ -674,7 +677,7 @@ final class UDPAQUETES_Shortcodes {
                     $payload = [
                         'title' => get_the_title(),
                         'permalink' => get_permalink(),
-                        'thumb' => has_post_thumbnail() ? get_the_post_thumbnail_url($id, 'large') : '',
+                        'thumb' => $thumb_url ?: '',
                         'destino' => $destino ?: '',
                         'fecha' => trim((string)get_post_meta($id, UDPAQUETES_Metaboxes::META_SALIDA, true)),
                         'regreso' => trim((string)get_post_meta($id, UDPAQUETES_Metaboxes::META_REGRESO, true)),
@@ -711,6 +714,8 @@ final class UDPAQUETES_Shortcodes {
                     <a class="udpq-card__img" href="<?php the_permalink(); ?>">
                         <?php if (has_post_thumbnail()): ?>
                             <?php the_post_thumbnail('large'); ?>
+                        <?php elseif (!empty($thumb_url)): ?>
+                            <img src="<?php echo esc_url($thumb_url); ?>" alt="<?php echo esc_attr(get_the_title()); ?>">
                         <?php else: ?>
                             <div class="udpq-card__ph">Paquete</div>
                         <?php endif; ?>
