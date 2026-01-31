@@ -19,6 +19,8 @@ final class UDPAQUETES_Metaboxes {
     const META_COMPANIA = '_udpq_compania_aerea';
     const META_NOCHES = '_udpq_noches';
     const META_VALOR_AEREO = '_udpq_valor_aereo';
+    const META_SALIDA_AEREO = '_udpq_salida_aereo';
+    const META_REGRESO_AEREO = '_udpq_regreso_aereo';
 
     // Fechas
     const META_SALIDA = '_udpq_salida';  // fecha
@@ -96,6 +98,8 @@ final class UDPAQUETES_Metaboxes {
         $compania     = get_post_meta($post->ID, self::META_COMPANIA, true);
         $noches       = get_post_meta($post->ID, self::META_NOCHES, true);
         $valor_aereo  = get_post_meta($post->ID, self::META_VALOR_AEREO, true);
+        $salida_aereo = get_post_meta($post->ID, self::META_SALIDA_AEREO, true);
+        $regreso_aereo = get_post_meta($post->ID, self::META_REGRESO_AEREO, true);
         $salida_date  = get_post_meta($post->ID, self::META_SALIDA, true);
         $regreso_date = get_post_meta($post->ID, self::META_REGRESO, true);
         $equipaje     = get_post_meta($post->ID, self::META_EQUIPAJE, true);
@@ -159,7 +163,15 @@ final class UDPAQUETES_Metaboxes {
                 <label for="<?php echo esc_attr(self::META_VALOR_AEREO); ?>">VALOR AÉREO</label>
                 <input type="number" min="0" step="1" id="<?php echo esc_attr(self::META_VALOR_AEREO); ?>" name="<?php echo esc_attr(self::META_VALOR_AEREO); ?>" value="<?php echo esc_attr($valor_aereo); ?>" />
             </div>
-            <div class="udpq-field"></div>
+            <div class="udpq-field">
+                <label for="<?php echo esc_attr(self::META_SALIDA_AEREO); ?>">SALIDA AÉREO</label>
+                <input type="text" id="<?php echo esc_attr(self::META_SALIDA_AEREO); ?>" name="<?php echo esc_attr(self::META_SALIDA_AEREO); ?>" value="<?php echo esc_attr($salida_aereo); ?>" placeholder="Ej: 10:30 HS" />
+            </div>
+
+            <div class="udpq-field">
+                <label for="<?php echo esc_attr(self::META_REGRESO_AEREO); ?>">REGRESO AÉREO</label>
+                <input type="text" id="<?php echo esc_attr(self::META_REGRESO_AEREO); ?>" name="<?php echo esc_attr(self::META_REGRESO_AEREO); ?>" value="<?php echo esc_attr($regreso_aereo); ?>" placeholder="Ej: 18:45 HS" />
+            </div>
 
             <div class="udpq-field">
                 <label for="<?php echo esc_attr(self::META_SALIDA); ?>">SALIDA (fecha)</label>
@@ -286,6 +298,8 @@ final class UDPAQUETES_Metaboxes {
             self::META_COMPANIA,
             self::META_NOCHES,
             self::META_VALOR_AEREO,
+            self::META_SALIDA_AEREO,
+            self::META_REGRESO_AEREO,
             self::META_SALIDA,
             self::META_REGRESO,
             self::META_EQUIPAJE,

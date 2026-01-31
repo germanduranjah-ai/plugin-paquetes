@@ -24,6 +24,8 @@ $destino = $meta['destino'] ?? '';
 $salida_vuelo = $meta['salida_vuelo'] ?? '';
 $compania = $meta['compania'] ?? '';
 $valor_aereo = $meta['valor_aereo'] ?? '';
+$salida_aereo = $meta['salida_aereo'] ?? '';
+$regreso_aereo = $meta['regreso_aereo'] ?? '';
 $noches = $meta['noches'] ?? '';
 $salida = $meta['salida'] ?? '';
 $regreso = $meta['regreso'] ?? '';
@@ -163,7 +165,7 @@ if (!function_exists('udpq_price_option_note')) {
             <?php endif; ?>
 
             <!-- Detalles del paquete (campos del backend) -->
-            <?php if (!empty($noches) || !empty($salida) || !empty($regreso) || !empty($equipaje) || !empty($regimen) || !empty($seguro_traslados)): ?>
+            <?php if (!empty($noches) || !empty($salida) || !empty($regreso) || !empty($salida_aereo) || !empty($regreso_aereo) || !empty($equipaje) || !empty($regimen) || !empty($seguro_traslados)): ?>
                 <div class="udpq-single__section">
                     <h2 class="udpq-single__section-title"><i class="udpq-ico fa-solid fa-circle-info" aria-hidden="true"></i> <?php _e('Detalles del paquete', 'ud-paquetes'); ?></h2>
 
@@ -189,6 +191,22 @@ if (!function_exists('udpq_price_option_note')) {
                                 <div class="udpq-single__detail-icon"><i class="fa-solid fa-plane-arrival"></i></div>
                                 <div class="udpq-single__detail-label"><?php _e('Regreso', 'ud-paquetes'); ?></div>
                                 <div class="udpq-single__detail-value"><?php echo esc_html(date_i18n('d/m/Y', strtotime($regreso))); ?></div>
+                            </div>
+                        <?php endif; ?>
+
+                        <?php if (!empty($salida_aereo)): ?>
+                            <div class="udpq-single__detail">
+                                <div class="udpq-single__detail-icon"><i class="fa-solid fa-plane-departure"></i></div>
+                                <div class="udpq-single__detail-label"><?php _e('Salida aéreo', 'ud-paquetes'); ?></div>
+                                <div class="udpq-single__detail-value"><?php echo esc_html($salida_aereo); ?></div>
+                            </div>
+                        <?php endif; ?>
+
+                        <?php if (!empty($regreso_aereo)): ?>
+                            <div class="udpq-single__detail">
+                                <div class="udpq-single__detail-icon"><i class="fa-solid fa-plane-arrival"></i></div>
+                                <div class="udpq-single__detail-label"><?php _e('Regreso aéreo', 'ud-paquetes'); ?></div>
+                                <div class="udpq-single__detail-value"><?php echo esc_html($regreso_aereo); ?></div>
                             </div>
                         <?php endif; ?>
 
@@ -244,6 +262,11 @@ if (!function_exists('udpq_price_option_note')) {
                                         </div>
                                     </div>
                                 <?php endif; ?>
+                                <?php if (!empty($salida_aereo)): ?>
+                                    <div class="udpq-single__service-info">
+                                        <?php echo esc_html($salida_aereo); ?>
+                                    </div>
+                                <?php endif; ?>
                             </div>
                         </div>
                     <?php endif; ?>
@@ -276,6 +299,11 @@ if (!function_exists('udpq_price_option_note')) {
                             </div>
                             <div class="udpq-single__service-content">
                                 <div class="udpq-card__title"><?php _e('Regreso', 'ud-paquetes'); ?></div>
+                                <?php if (!empty($regreso_aereo)): ?>
+                                    <div class="udpq-single__service-info">
+                                        <?php echo esc_html($regreso_aereo); ?>
+                                    </div>
+                                <?php endif; ?>
                             </div>
                         </div>
                     <?php endif; ?>
@@ -622,5 +650,4 @@ function render_default_reserva_form($post_id, $opts) {
         </button>
     </div>
     <?php endif; ?>
-
 
