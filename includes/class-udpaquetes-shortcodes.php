@@ -127,6 +127,13 @@ final class UDPAQUETES_Shortcodes {
         $v_price_max = isset($_GET['price_max']) ? sanitize_text_field($_GET['price_max']) : '';
         $v_fecha_desde = isset($_GET['fecha_desde']) ? sanitize_text_field($_GET['fecha_desde']) : '';
         $v_fecha_hasta = isset($_GET['fecha_hasta']) ? sanitize_text_field($_GET['fecha_hasta']) : '';
+        $destino_terms = [];
+        if ($show_destino && taxonomy_exists(UDPAQUETES_CPT::TAX_DESTINO)) {
+            $destino_terms = get_terms([
+                'taxonomy' => UDPAQUETES_CPT::TAX_DESTINO,
+                'hide_empty' => false,
+            ]);
+        }
 
         ob_start();
 
@@ -141,7 +148,18 @@ final class UDPAQUETES_Shortcodes {
                 <?php if ($show_destino): ?>
                     <div class="udpq-filters__field">
                         <label>Destino</label>
-                        <input type="text" name="destino" value="<?php echo esc_attr($v_destino); ?>" placeholder="Ej: Punta Cana" />
+                        <?php if (!empty($destino_terms) && !is_wp_error($destino_terms)): ?>
+                            <select name="destino">
+                                <option value=""><?php esc_html_e('Todos los destinos', 'ud-paquetes'); ?></option>
+                                <?php foreach ($destino_terms as $term): ?>
+                                    <option value="<?php echo esc_attr($term->slug); ?>" <?php selected($v_destino, $term->slug); ?>>
+                                        <?php echo esc_html($term->name); ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        <?php else: ?>
+                            <input type="text" name="destino" value="<?php echo esc_attr($v_destino); ?>" placeholder="Ej: Punta Cana" />
+                        <?php endif; ?>
                     </div>
                 <?php endif; ?>
 
@@ -402,8 +420,7 @@ final class UDPAQUETES_Shortcodes {
             wp_enqueue_script('udpq-carousel');
         }
 
-        // NOTE: In this plugin branch, "Destino" is stored as a plain text meta (META_DESTINO).
-        // Some older builds also had a taxonomy. To avoid empty results, we filter by meta.
+        // "Destino" is managed as a taxonomy (ud_destino). Fallback to meta only if taxonomy is missing.
         $tax_query = [];
 
         $meta_query = [];
@@ -454,29 +471,39 @@ final class UDPAQUETES_Shortcodes {
         }
 
         // Text filters (contains)
-        // Destino puede ser una lista separada por comas: "Mexico,Punta Cana,Cancun"
+        // Destino puede ser una lista separada por comas: "mexico,punta-cana,cancun"
         if (!empty($atts['destino'])) {
             $destinos = array_filter(array_map('trim', explode(',', (string) $atts['destino'])));
-            if (count($destinos) > 1) {
-                // Múltiples destinos: usar OR
-                $destino_queries = [];
-                foreach ($destinos as $dest) {
-                    $destino_queries[] = [
+            $destinos = array_map('sanitize_title', $destinos);
+
+            if (!empty($destinos) && taxonomy_exists(UDPAQUETES_CPT::TAX_DESTINO)) {
+                $tax_query[] = [
+                    'taxonomy' => UDPAQUETES_CPT::TAX_DESTINO,
+                    'field' => 'slug',
+                    'terms' => $destinos,
+                    'operator' => 'IN',
+                ];
+            } elseif (!empty($destinos)) {
+                // Fallback: meta query when taxonomy isn't available.
+                if (count($destinos) > 1) {
+                    $destino_queries = [];
+                    foreach ($destinos as $dest) {
+                        $destino_queries[] = [
+                            'key' => UDPAQUETES_Metaboxes::META_DESTINO,
+                            'value' => $dest,
+                            'compare' => 'LIKE',
+                        ];
+                    }
+                    $destino_query = ['relation' => 'OR'];
+                    $destino_query = array_merge($destino_query, $destino_queries);
+                    $meta_query[] = $destino_query;
+                } else {
+                    $meta_query[] = [
                         'key' => UDPAQUETES_Metaboxes::META_DESTINO,
-                        'value' => sanitize_text_field($dest),
+                        'value' => $destinos[0],
                         'compare' => 'LIKE',
                     ];
                 }
-                $destino_query = ['relation' => 'OR'];
-                $destino_query = array_merge($destino_query, $destino_queries);
-                $meta_query[] = $destino_query;
-            } elseif (count($destinos) === 1) {
-                // Un solo destino
-                $meta_query[] = [
-                    'key' => UDPAQUETES_Metaboxes::META_DESTINO,
-                    'value' => sanitize_text_field($destinos[0]),
-                    'compare' => 'LIKE',
-                ];
             }
         }
         if (!empty($atts['hotel'])) {
@@ -661,6 +688,9 @@ final class UDPAQUETES_Shortcodes {
                 [$min_price, $currency] = self::get_price_from_meta($id);
                 $destino = get_post_meta($id, UDPAQUETES_Metaboxes::META_DESTINO, true);
                 $noches = get_post_meta($id, UDPAQUETES_Metaboxes::META_NOCHES, true);
+                $thumb_url = has_post_thumbnail()
+                    ? get_the_post_thumbnail_url($id, 'large')
+                    : trim((string) get_post_meta($id, '_udpq_external_image_url', true));
 
                 // Compatibilidad / hardening:
                 // En builds anteriores existían metadatos como "servicios"/"beneficios".
@@ -674,7 +704,7 @@ final class UDPAQUETES_Shortcodes {
                     $payload = [
                         'title' => get_the_title(),
                         'permalink' => get_permalink(),
-                        'thumb' => has_post_thumbnail() ? get_the_post_thumbnail_url($id, 'large') : '',
+                        'thumb' => $thumb_url ?: '',
                         'destino' => $destino ?: '',
                         'fecha' => trim((string)get_post_meta($id, UDPAQUETES_Metaboxes::META_SALIDA, true)),
                         'regreso' => trim((string)get_post_meta($id, UDPAQUETES_Metaboxes::META_REGRESO, true)),
@@ -711,6 +741,8 @@ final class UDPAQUETES_Shortcodes {
                     <a class="udpq-card__img" href="<?php the_permalink(); ?>">
                         <?php if (has_post_thumbnail()): ?>
                             <?php the_post_thumbnail('large'); ?>
+                        <?php elseif (!empty($thumb_url)): ?>
+                            <img src="<?php echo esc_url($thumb_url); ?>" alt="<?php echo esc_attr(get_the_title()); ?>">
                         <?php else: ?>
                             <div class="udpq-card__ph">Paquete</div>
                         <?php endif; ?>

@@ -236,7 +236,7 @@ final class UDPAQUETES_Importer {
             <hr>
             <h2><?php esc_html_e('Sugerencia de formato', 'ud-paquetes'); ?></h2>
             <p style="max-width:980px;">
-                <?php esc_html_e('Encabezados recomendados: ID PAQUETE, SALIDA vuelo, DESTINO, MP, COMPANIA AEREA, NOCHES EN DESTINO, VALOR AEREO (desde), SALIDA, REGRESO, EQUIPAJE, nombre del hotel, regimen, seguro y traslados, base doble, base triple, base single, base family, INFANTE, URL IMAGEN, INFORMACION (texto libre).', 'ud-paquetes'); ?>
+                <?php esc_html_e('Encabezados recomendados: ID PAQUETE, SALIDA vuelo, DESTINO, MP, COMPANIA AEREA, NOCHES EN DESTINO, VALOR AEREO (desde), SALIDA AEREO, REGRESO AEREO, SALIDA, REGRESO, EQUIPAJE, nombre del hotel, regimen, seguro y traslados, base doble, base triple, base single, base family, INFANTE, URL IMAGEN, INFORMACION (texto libre).', 'ud-paquetes'); ?>
             </p>
         </div>
         <?php
@@ -496,6 +496,8 @@ final class UDPAQUETES_Importer {
             $sku = udpq_sanitize_text($sku);
 
             $salida_txt = trim((string) self::get_cell($row, $map, ['salida_vuelo','SALIDA vuelo','SALIDA']));
+            $salida_aereo = trim((string) self::get_cell($row, $map, ['salida_aereo','SALIDA AEREO','SALIDA AÉREO']));
+            $regreso_aereo = trim((string) self::get_cell($row, $map, ['regreso_aereo','REGRESO AEREO','REGRESO AÉREO']));
             $hotel = trim((string) self::get_cell($row, $map, ['hotel','nombre del hotel','NOMBRE DEL HOTEL']));
             $fecha_salida = self::normalize_date(self::get_cell($row, $map, ['fecha_salida','SALIDA']));
             $fecha_regreso = self::normalize_date(self::get_cell($row, $map, ['fecha_regreso','REGRESO']));
@@ -558,6 +560,9 @@ final class UDPAQUETES_Importer {
             // Mapeo de campos
             update_post_meta($post_id, UDPAQUETES_Metaboxes::META_SALIDA_VUELO, $salida_txt);
             update_post_meta($post_id, UDPAQUETES_Metaboxes::META_DESTINO, $destino);
+            UDPAQUETES_Metaboxes::sync_destino_taxonomy($post_id, $destino);
+            update_post_meta($post_id, UDPAQUETES_Metaboxes::META_SALIDA_AEREO, $salida_aereo);
+            update_post_meta($post_id, UDPAQUETES_Metaboxes::META_REGRESO_AEREO, $regreso_aereo);
 
             $mp = trim((string) self::get_cell($row, $map, ['mp','MP','LINK MP']));
             if ($mp !== '') {
@@ -730,6 +735,8 @@ final class UDPAQUETES_Importer {
             'COMPANIA AEREA',
             'NOCHES EN DESTINO',
             'VALOR AEREO (desde)',
+            'SALIDA AEREO',
+            'REGRESO AEREO',
             'SALIDA',
             'REGRESO',
             'EQUIPAJE',
@@ -806,6 +813,8 @@ final class UDPAQUETES_Importer {
             'COMPANIA AEREA',
             'NOCHES EN DESTINO',
             'VALOR AEREO (desde)',
+            'SALIDA AEREO',
+            'REGRESO AEREO',
             'SALIDA',
             'REGRESO',
             'EQUIPAJE',
@@ -863,6 +872,8 @@ final class UDPAQUETES_Importer {
                 $compania     = (string) get_post_meta($post_id, UDPAQUETES_Metaboxes::META_COMPANIA, true);
                 $noches       = (string) get_post_meta($post_id, UDPAQUETES_Metaboxes::META_NOCHES, true);
                 $valor_aereo  = (string) get_post_meta($post_id, UDPAQUETES_Metaboxes::META_VALOR_AEREO, true);
+                $salida_aereo = (string) get_post_meta($post_id, UDPAQUETES_Metaboxes::META_SALIDA_AEREO, true);
+                $regreso_aereo = (string) get_post_meta($post_id, UDPAQUETES_Metaboxes::META_REGRESO_AEREO, true);
                 $salida       = (string) get_post_meta($post_id, UDPAQUETES_Metaboxes::META_SALIDA, true);
                 $regreso      = (string) get_post_meta($post_id, UDPAQUETES_Metaboxes::META_REGRESO, true);
                 $equipaje     = (string) get_post_meta($post_id, UDPAQUETES_Metaboxes::META_EQUIPAJE, true);
@@ -911,6 +922,8 @@ final class UDPAQUETES_Importer {
                     $compania,
                     $noches,
                     $valor_aereo,
+                    $salida_aereo,
+                    $regreso_aereo,
                     $salida,
                     $regreso,
                     $equipaje,
@@ -1095,6 +1108,8 @@ final class UDPAQUETES_Importer {
         if (isset($map['compania aerea']) && !isset($map['compañia aerea'])) $map['compañia aerea'] = $map['compania aerea'];
         if (isset($map['valor aereo']) && !isset($map['valor aéreo'])) $map['valor aéreo'] = $map['valor aereo'];
         if (isset($map['regimen']) && !isset($map['régimen'])) $map['régimen'] = $map['regimen'];
+        if (isset($map['salida aereo']) && !isset($map['salida aéreo'])) $map['salida aéreo'] = $map['salida aereo'];
+        if (isset($map['regreso aereo']) && !isset($map['regreso aéreo'])) $map['regreso aéreo'] = $map['regreso aereo'];
 
         return $map;
     }
