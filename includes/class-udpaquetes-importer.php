@@ -383,8 +383,7 @@ final class UDPAQUETES_Importer {
 
             $existing = 0;
             if ($mode === 'upsert') {
-                if ($sku !== '') $existing = self::find_post_by_sku($sku);
-                if (!$existing) $existing = self::find_post_by_hash($hash);
+                $existing = self::find_existing_post($sku, $hash);
             }
 
             if ($existing) $counts['update']++; else $counts['create']++;
@@ -516,15 +515,7 @@ final class UDPAQUETES_Importer {
             $post_id = 0;
 
             if ($mode === 'upsert') {
-                // 1) Si viene SKU, priorizamos buscar por SKU
-                $existing = 0;
-                if ($sku !== '') {
-                    $existing = self::find_post_by_sku($sku);
-                }
-                // 2) Fallback por hash
-                if (!$existing) {
-                    $existing = self::find_post_by_hash($hash);
-                }
+                $existing = self::find_existing_post($sku, $hash);
                 if ($existing) {
                     $post_id = $existing;
                     $updated++;
@@ -724,6 +715,29 @@ final class UDPAQUETES_Importer {
         ]);
         if (!empty($q->posts)) return intval($q->posts[0]);
         return 0;
+    }
+
+    private static function find_existing_post($sku, $hash) {
+        $existing = 0;
+        $sku = udpq_sanitize_text($sku);
+
+        if ($sku !== '') {
+            $existing = self::find_post_by_sku($sku);
+
+            if (!$existing && ctype_digit($sku)) {
+                $post_id = intval($sku);
+                $post = get_post($post_id);
+                if ($post && $post->post_type === UDPAQUETES_CPT::POST_TYPE) {
+                    $existing = $post_id;
+                }
+            }
+        }
+
+        if (!$existing && $hash !== '') {
+            $existing = self::find_post_by_hash($hash);
+        }
+
+        return $existing;
     }
 
     /**
