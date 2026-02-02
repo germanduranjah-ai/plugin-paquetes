@@ -236,7 +236,7 @@ final class UDPAQUETES_Importer {
             <hr>
             <h2><?php esc_html_e('Sugerencia de formato', 'ud-paquetes'); ?></h2>
             <p style="max-width:980px;">
-                <?php esc_html_e('Encabezados recomendados: ID PAQUETE, SALIDA vuelo, DESTINO, MP, COMPANIA AEREA, NOCHES EN DESTINO, VALOR AEREO (desde), SALIDA AEREO, REGRESO AEREO, SALIDA, REGRESO, EQUIPAJE, nombre del hotel, regimen, seguro y traslados, base doble, base triple, base single, base family, INFANTE, URL IMAGEN, INFORMACION (texto libre).', 'ud-paquetes'); ?>
+                <?php esc_html_e('Encabezados recomendados: ID PAQUETE, SALIDA vuelo, DESTINO, MP, COMPANIA AEREA, NOCHES EN DESTINO, VALOR AEREO (desde), SALIDA AEREO, REGRESO AEREO, SALIDA, REGRESO, EQUIPAJE, nombre del hotel, regimen, seguro y traslados, ACTIVO, base doble, base triple, base single, base family, INFANTE, URL IMAGEN, INFORMACION (texto libre).', 'ud-paquetes'); ?>
             </p>
         </div>
         <?php
@@ -554,8 +554,19 @@ final class UDPAQUETES_Importer {
             // Guardamos hash
             update_post_meta($post_id, self::META_IMPORT_HASH, $hash);
 
+            $active_raw = trim((string) self::get_cell($row, $map, ['activo', 'ACTIVO', 'estado', 'ESTADO']));
+            $active_value = null;
+            if ($active_raw !== '') {
+                $active_norm = strtolower($active_raw);
+                $active_value = in_array($active_norm, ['1', 'si', 'sí', 'activo', 'active', 'yes'], true) ? '1' : '0';
+            }
+
             // Seteamos activo
-            update_post_meta($post_id, UDPAQUETES_Metaboxes::META_ACTIVE, '1');
+            if ($active_value === null) {
+                $current_active = (string) get_post_meta($post_id, UDPAQUETES_Metaboxes::META_ACTIVE, true);
+                $active_value = ($current_active !== '') ? $current_active : '1';
+            }
+            update_post_meta($post_id, UDPAQUETES_Metaboxes::META_ACTIVE, $active_value);
 
             // Mapeo de campos
             update_post_meta($post_id, UDPAQUETES_Metaboxes::META_SALIDA_VUELO, $salida_txt);
@@ -743,6 +754,7 @@ final class UDPAQUETES_Importer {
             'nombre del hotel',
             'regimen',
             'seguro y traslados',
+            'ACTIVO',
             'base doble',
             'base triple',
             'base single',
@@ -821,6 +833,7 @@ final class UDPAQUETES_Importer {
             'nombre del hotel',
             'regimen',
             'seguro y traslados',
+            'ACTIVO',
             'base doble',
             'base triple',
             'base single',
@@ -881,6 +894,7 @@ final class UDPAQUETES_Importer {
                 $regimen      = (string) get_post_meta($post_id, UDPAQUETES_Metaboxes::META_REGIMEN, true);
                 $seguro       = (string) get_post_meta($post_id, UDPAQUETES_Metaboxes::META_SEGURO_TRASLADOS, true);
                 $info_extra   = (string) get_post_meta($post_id, UDPAQUETES_Metaboxes::META_INFO_EXTRA, true);
+                $activo       = (string) get_post_meta($post_id, UDPAQUETES_Metaboxes::META_ACTIVE, true);
 
                 // Opciones de precio
                 $prices = [
@@ -930,6 +944,7 @@ final class UDPAQUETES_Importer {
                     $hotel,
                     $regimen,
                     (!empty($seguro) ? 'SI' : ''),
+                    (!empty($activo) ? 'SI' : 'NO'),
                     $prices['base_doble'],
                     $prices['base_triple'],
                     $prices['base_single'],
