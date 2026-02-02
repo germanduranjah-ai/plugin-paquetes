@@ -17,6 +17,7 @@ final class UDPAQUETES_Plugin {
         // Admin metaboxes
         if (is_admin()) {
             UDPAQUETES_Metaboxes::init();
+            UDPAQUETES_CPT::register_admin_filters();
         }
 
         // Front shortcodes + assets
@@ -389,4 +390,3 @@ final class UDPAQUETES_Plugin {
     }
 
 }
-
