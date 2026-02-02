@@ -10,7 +10,7 @@ Plugin de WordPress para gestionar **Paquetes de viaje** (CPT) con:
 ## 1) Post Type
 
 - **Post Type:** `ud_paquete`
-- **Taxonomy Destinos:** `udpq_destino`
+- **Taxonomy Destinos:** `ud_destino`
 
 ## 2) Shortcodes
 
