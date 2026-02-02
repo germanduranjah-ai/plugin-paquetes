@@ -110,6 +110,10 @@ function udpq_format_money_locale($amount, $currency = 'USD') {
         return 'USD ' . number_format($amount, 0, ',', '.');
     }
 
+    if (!class_exists('NumberFormatter')) {
+        return $currency_info['symbol'] . ' ' . number_format($amount, 0, ',', '.');
+    }
+
     // Use locale-aware formatting
     $locale = $currency_info['locale'];
     $formatter = new NumberFormatter($locale, NumberFormatter::CURRENCY);
@@ -268,6 +272,8 @@ function udpq_get_paquete_meta($post_id) {
         'salida_vuelo' => get_post_meta($post_id, UDPAQUETES_Metaboxes::META_SALIDA_VUELO, true),
         'compania' => get_post_meta($post_id, UDPAQUETES_Metaboxes::META_COMPANIA, true),
         'valor_aereo' => get_post_meta($post_id, UDPAQUETES_Metaboxes::META_VALOR_AEREO, true),
+        'salida_aereo' => get_post_meta($post_id, UDPAQUETES_Metaboxes::META_SALIDA_AEREO, true),
+        'regreso_aereo' => get_post_meta($post_id, UDPAQUETES_Metaboxes::META_REGRESO_AEREO, true),
         'noches' => get_post_meta($post_id, UDPAQUETES_Metaboxes::META_NOCHES, true),
         'salida' => get_post_meta($post_id, UDPAQUETES_Metaboxes::META_SALIDA, true),
         'regreso' => get_post_meta($post_id, UDPAQUETES_Metaboxes::META_REGRESO, true),
