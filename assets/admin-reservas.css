@@ -1,0 +1,33 @@
+/* Admin styles for Reservas list and edit screens */
+
+.post-type-ud_reserva .wp-list-table.fixed {
+  border-collapse: separate;
+  border-spacing: 0 6px;
+}
+
+.post-type-ud_reserva .wp-list-table.fixed tbody tr {
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.08);
+}
+
+.post-type-ud_reserva .wp-list-table.fixed tbody tr td {
+  vertical-align: middle;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.post-type-ud_reserva .wp-list-table.fixed tbody tr td:first-child {
+  border-radius: 8px 0 0 8px;
+}
+
+.post-type-ud_reserva .wp-list-table.fixed tbody tr td:last-child {
+  border-radius: 0 8px 8px 0;
+}
+
+.post-type-ud_reserva .column-udpq_status {
+  font-weight: 600;
+}
+
+.post-type-ud_reserva .column-udpq_price {
+  white-space: nowrap;
+}

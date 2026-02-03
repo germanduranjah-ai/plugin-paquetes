@@ -33,9 +33,28 @@ final class UDPAQUETES_Reserva {
             add_action('manage_' . UDPAQUETES_CPT::POST_TYPE_RESERVA . '_posts_custom_column', [__CLASS__, 'admin_column_content'], 10, 2);
             add_filter('post_row_actions', [__CLASS__, 'admin_row_actions'], 10, 2);
             add_action('admin_post_udpq_reserva_set_status', [__CLASS__, 'handle_admin_set_status']);
+            add_action('admin_enqueue_scripts', [__CLASS__, 'enqueue_admin_assets']);
             add_action('add_meta_boxes', [__CLASS__, 'add_meta_boxes']);
             add_action('save_post_' . UDPAQUETES_CPT::POST_TYPE_RESERVA, [__CLASS__, 'save_reserva_metabox'], 10, 2);
         }
+    }
+
+    public static function enqueue_admin_assets($hook_suffix): void {
+        if (!in_array($hook_suffix, ['edit.php', 'post.php', 'post-new.php'], true)) {
+            return;
+        }
+
+        $screen = function_exists('get_current_screen') ? get_current_screen() : null;
+        if (!$screen || $screen->post_type !== UDPAQUETES_CPT::POST_TYPE_RESERVA) {
+            return;
+        }
+
+        wp_enqueue_style(
+            'udpq-admin-reservas',
+            UDPQ_URL . 'assets/admin-reservas.css',
+            [],
+            UDPQ_VERSION
+        );
     }
 
     /**
@@ -556,4 +575,3 @@ final class UDPAQUETES_Reserva {
     }
 
 }
-
