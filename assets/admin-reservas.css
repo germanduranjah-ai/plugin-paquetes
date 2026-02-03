@@ -1,27 +1,65 @@
 /* Admin styles for Reservas list and edit screens */
 
+.post-type-ud_reserva {
+  --udpq-admin-border: #e5e7eb;
+  --udpq-admin-muted: #6b7280;
+  --udpq-admin-bg: #f8fafc;
+  --udpq-admin-row: #ffffff;
+  --udpq-admin-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
+}
+
+.post-type-ud_reserva .wrap > h1 {
+  letter-spacing: -0.01em;
+}
+
+.post-type-ud_reserva .tablenav.top {
+  padding: 8px 0 12px;
+}
+
+.post-type-ud_reserva .wp-list-table {
+  border: 1px solid var(--udpq-admin-border);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 1px 1px rgba(15, 23, 42, 0.04);
+}
+
+.post-type-ud_reserva .wp-list-table thead th,
+.post-type-ud_reserva .wp-list-table tfoot th {
+  background: var(--udpq-admin-bg);
+  color: var(--udpq-admin-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--udpq-admin-border);
+}
+
 .post-type-ud_reserva .wp-list-table.fixed {
   border-collapse: separate;
-  border-spacing: 0 6px;
+  border-spacing: 0 8px;
 }
 
 .post-type-ud_reserva .wp-list-table.fixed tbody tr {
-  background: #fff;
-  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.08);
+  background: var(--udpq-admin-row);
+  box-shadow: var(--udpq-admin-shadow);
+  border: 1px solid var(--udpq-admin-border);
 }
 
 .post-type-ud_reserva .wp-list-table.fixed tbody tr td {
   vertical-align: middle;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding: 12px 10px;
 }
 
 .post-type-ud_reserva .wp-list-table.fixed tbody tr td:first-child {
-  border-radius: 8px 0 0 8px;
+  border-radius: 10px 0 0 10px;
 }
 
 .post-type-ud_reserva .wp-list-table.fixed tbody tr td:last-child {
-  border-radius: 0 8px 8px 0;
+  border-radius: 0 10px 10px 0;
+}
+
+.post-type-ud_reserva .wp-list-table .row-title {
+  font-weight: 600;
 }
 
 .post-type-ud_reserva .column-udpq_status {
@@ -30,4 +68,9 @@
 
 .post-type-ud_reserva .column-udpq_price {
   white-space: nowrap;
+  font-weight: 600;
+}
+
+.post-type-ud_reserva .column-date {
+  color: var(--udpq-admin-muted);
 }
