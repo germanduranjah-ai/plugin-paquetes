@@ -19,6 +19,8 @@ final class UDPAQUETES_Metaboxes {
     const META_COMPANIA = '_udpq_compania_aerea';
     const META_NOCHES = '_udpq_noches';
     const META_VALOR_AEREO = '_udpq_valor_aereo';
+    const META_SALIDA_AEREO = '_udpq_salida_aereo';
+    const META_REGRESO_AEREO = '_udpq_regreso_aereo';
 
     // Fechas
     const META_SALIDA = '_udpq_salida';  // fecha
@@ -96,6 +98,8 @@ final class UDPAQUETES_Metaboxes {
         $compania     = get_post_meta($post->ID, self::META_COMPANIA, true);
         $noches       = get_post_meta($post->ID, self::META_NOCHES, true);
         $valor_aereo  = get_post_meta($post->ID, self::META_VALOR_AEREO, true);
+        $salida_aereo = get_post_meta($post->ID, self::META_SALIDA_AEREO, true);
+        $regreso_aereo = get_post_meta($post->ID, self::META_REGRESO_AEREO, true);
         $salida_date  = get_post_meta($post->ID, self::META_SALIDA, true);
         $regreso_date = get_post_meta($post->ID, self::META_REGRESO, true);
         $equipaje     = get_post_meta($post->ID, self::META_EQUIPAJE, true);
@@ -103,6 +107,13 @@ final class UDPAQUETES_Metaboxes {
         $regimen      = get_post_meta($post->ID, self::META_REGIMEN, true);
         $seguro       = get_post_meta($post->ID, self::META_SEGURO_TRASLADOS, true);
         $info_extra   = get_post_meta($post->ID, self::META_INFO_EXTRA, true);
+        $destino_terms = [];
+        if (taxonomy_exists(UDPAQUETES_CPT::TAX_DESTINO)) {
+            $destino_terms = get_terms([
+                'taxonomy' => UDPAQUETES_CPT::TAX_DESTINO,
+                'hide_empty' => false,
+            ]);
+        }
 
         ?>
         <style>
@@ -137,7 +148,14 @@ final class UDPAQUETES_Metaboxes {
             </div>
             <div class="udpq-field">
                 <label for="<?php echo esc_attr(self::META_DESTINO); ?>">DESTINO</label>
-                <input type="text" id="<?php echo esc_attr(self::META_DESTINO); ?>" name="<?php echo esc_attr(self::META_DESTINO); ?>" value="<?php echo esc_attr($destino); ?>" placeholder="Ej: Punta Cana" />
+                <input type="text" id="<?php echo esc_attr(self::META_DESTINO); ?>" name="<?php echo esc_attr(self::META_DESTINO); ?>" value="<?php echo esc_attr($destino); ?>" placeholder="Ej: Punta Cana" list="udpq-destino-list" />
+                <?php if (!empty($destino_terms) && !is_wp_error($destino_terms)): ?>
+                    <datalist id="udpq-destino-list">
+                        <?php foreach ($destino_terms as $term): ?>
+                            <option value="<?php echo esc_attr($term->name); ?>"></option>
+                        <?php endforeach; ?>
+                    </datalist>
+                <?php endif; ?>
             </div>
 
             <div class="udpq-field udpq-wide">
@@ -159,7 +177,15 @@ final class UDPAQUETES_Metaboxes {
                 <label for="<?php echo esc_attr(self::META_VALOR_AEREO); ?>">VALOR AÉREO</label>
                 <input type="number" min="0" step="1" id="<?php echo esc_attr(self::META_VALOR_AEREO); ?>" name="<?php echo esc_attr(self::META_VALOR_AEREO); ?>" value="<?php echo esc_attr($valor_aereo); ?>" />
             </div>
-            <div class="udpq-field"></div>
+            <div class="udpq-field">
+                <label for="<?php echo esc_attr(self::META_SALIDA_AEREO); ?>">SALIDA AÉREO</label>
+                <input type="text" id="<?php echo esc_attr(self::META_SALIDA_AEREO); ?>" name="<?php echo esc_attr(self::META_SALIDA_AEREO); ?>" value="<?php echo esc_attr($salida_aereo); ?>" placeholder="Ej: 10:30 HS" />
+            </div>
+
+            <div class="udpq-field">
+                <label for="<?php echo esc_attr(self::META_REGRESO_AEREO); ?>">REGRESO AÉREO</label>
+                <input type="text" id="<?php echo esc_attr(self::META_REGRESO_AEREO); ?>" name="<?php echo esc_attr(self::META_REGRESO_AEREO); ?>" value="<?php echo esc_attr($regreso_aereo); ?>" placeholder="Ej: 18:45 HS" />
+            </div>
 
             <div class="udpq-field">
                 <label for="<?php echo esc_attr(self::META_SALIDA); ?>">SALIDA (fecha)</label>
@@ -286,6 +312,8 @@ final class UDPAQUETES_Metaboxes {
             self::META_COMPANIA,
             self::META_NOCHES,
             self::META_VALOR_AEREO,
+            self::META_SALIDA_AEREO,
+            self::META_REGRESO_AEREO,
             self::META_SALIDA,
             self::META_REGRESO,
             self::META_EQUIPAJE,
@@ -293,6 +321,8 @@ final class UDPAQUETES_Metaboxes {
             self::META_REGIMEN,
             self::META_INFO_EXTRA,
         ];
+
+        $destino_value = '';
 
         foreach ($simple_keys as $key) {
             $val = isset($_POST[$key]) ? $_POST[$key] : '';
@@ -309,7 +339,13 @@ final class UDPAQUETES_Metaboxes {
             }
 
             update_post_meta($post_id, $key, $val);
+
+            if ($key === self::META_DESTINO) {
+                $destino_value = $val;
+            }
         }
+
+        self::sync_destino_taxonomy($post_id, $destino_value);
 
         // Seguro y traslados (checklist)
         update_post_meta($post_id, self::META_SEGURO_TRASLADOS, !empty($_POST[self::META_SEGURO_TRASLADOS]) ? '1' : '0');
@@ -318,6 +354,30 @@ final class UDPAQUETES_Metaboxes {
         $raw = $_POST[self::META_PRICE_OPTIONS] ?? [];
         $options = udpq_sanitize_price_options($raw);
         update_post_meta($post_id, self::META_PRICE_OPTIONS, $options);
+    }
+
+    public static function sync_destino_taxonomy($post_id, $destino) {
+        if (!taxonomy_exists(UDPAQUETES_CPT::TAX_DESTINO)) {
+            return;
+        }
+
+        $destino = is_string($destino) ? trim($destino) : '';
+        if ($destino === '') {
+            wp_set_object_terms($post_id, [], UDPAQUETES_CPT::TAX_DESTINO, false);
+            return;
+        }
+
+        $term = term_exists($destino, UDPAQUETES_CPT::TAX_DESTINO);
+        if (!$term) {
+            $term = wp_insert_term($destino, UDPAQUETES_CPT::TAX_DESTINO);
+        }
+
+        if (is_wp_error($term)) {
+            return;
+        }
+
+        $term_id = is_array($term) ? $term['term_id'] : $term;
+        wp_set_object_terms($post_id, [intval($term_id)], UDPAQUETES_CPT::TAX_DESTINO, false);
     }
 
 }

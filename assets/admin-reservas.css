@@ -1,0 +1,129 @@
+/* Admin styles for Reservas list and edit screens */
+
+.post-type-ud_reserva {
+  --udpq-admin-border: #e5e7eb;
+  --udpq-admin-muted: #6b7280;
+  --udpq-admin-bg: #f8fafc;
+  --udpq-admin-row: #ffffff;
+  --udpq-admin-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
+}
+
+.post-type-ud_reserva .wrap > h1 {
+  letter-spacing: -0.01em;
+}
+
+.post-type-ud_reserva .tablenav.top {
+  padding: 8px 0 12px;
+}
+
+.post-type-ud_reserva .wp-list-table {
+  border: 1px solid var(--udpq-admin-border);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 1px 1px rgba(15, 23, 42, 0.04);
+}
+
+.post-type-ud_reserva .wp-list-table thead th,
+.post-type-ud_reserva .wp-list-table tfoot th {
+  background: var(--udpq-admin-bg);
+  color: var(--udpq-admin-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--udpq-admin-border);
+}
+
+.post-type-ud_reserva .wp-list-table.fixed {
+  border-collapse: separate;
+  border-spacing: 0 8px;
+}
+
+.post-type-ud_reserva .wp-list-table.fixed tbody tr {
+  background: var(--udpq-admin-row);
+  box-shadow: var(--udpq-admin-shadow);
+  border: 1px solid var(--udpq-admin-border);
+}
+
+.post-type-ud_reserva .wp-list-table.fixed tbody tr td {
+  vertical-align: middle;
+  padding: 12px 10px;
+}
+
+.post-type-ud_reserva .wp-list-table.fixed tbody tr td:first-child {
+  border-radius: 10px 0 0 10px;
+}
+
+.post-type-ud_reserva .wp-list-table.fixed tbody tr td:last-child {
+  border-radius: 0 10px 10px 0;
+}
+
+.post-type-ud_reserva .wp-list-table .row-title {
+  font-weight: 600;
+}
+
+.post-type-ud_reserva .column-udpq_status {
+  font-weight: 600;
+}
+
+.post-type-ud_reserva .column-udpq_precio {
+  white-space: nowrap;
+  font-weight: 600;
+  text-align: right;
+}
+
+.post-type-ud_reserva .column-date {
+  color: var(--udpq-admin-muted);
+}
+
+.post-type-ud_reserva .udpq-admin-price {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.post-type-ud_reserva .udpq-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  background: #eef2f7;
+  color: #334155;
+}
+
+.post-type-ud_reserva .udpq-badge--status-pending {
+  background: #fff4cc;
+  color: #8a6d1d;
+}
+
+.post-type-ud_reserva .udpq-badge--status-confirmed {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.post-type-ud_reserva .udpq-badge--status-cancelled {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.post-type-ud_reserva .udpq-badge--status-completed {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.post-type-ud_reserva .udpq-badge--option {
+  background: #ecfeff;
+  color: #0f766e;
+}
+
+.post-type-ud_reserva .udpq-badge--currency {
+  background: #ede9fe;
+  color: #5b21b6;
+}

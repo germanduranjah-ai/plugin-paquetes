@@ -19,6 +19,7 @@ final class UDPAQUETES_Reserva {
     const META_RESERVA_MONEDA = '_udpq_reserva_moneda';
     const META_RESERVA_PRECIO_TOTAL = '_udpq_reserva_precio_total';
     const META_RESERVA_FECHA = '_udpq_reserva_fecha';
+    const META_RESERVA_FECHA_ORD = '_udpq_reserva_fecha_ymd';
     const META_RESERVA_STATUS = '_udpq_reserva_status';
     const META_RESERVA_MP_URL = '_udpq_reserva_mp_url';
 
@@ -27,12 +28,8 @@ final class UDPAQUETES_Reserva {
         add_action('wp_ajax_udpq_reserva', [__CLASS__, 'handle_ajax_reserva']);
         add_action('wp_ajax_nopriv_udpq_reserva', [__CLASS__, 'handle_ajax_reserva']);
 
-        // Admin UX (Reservas)
+        // Admin metabox
         if (is_admin()) {
-            add_filter('manage_edit-' . UDPAQUETES_CPT::POST_TYPE_RESERVA . '_columns', [__CLASS__, 'admin_columns']);
-            add_action('manage_' . UDPAQUETES_CPT::POST_TYPE_RESERVA . '_posts_custom_column', [__CLASS__, 'admin_column_content'], 10, 2);
-            add_filter('post_row_actions', [__CLASS__, 'admin_row_actions'], 10, 2);
-            add_action('admin_post_udpq_reserva_set_status', [__CLASS__, 'handle_admin_set_status']);
             add_action('add_meta_boxes', [__CLASS__, 'add_meta_boxes']);
             add_action('save_post_' . UDPAQUETES_CPT::POST_TYPE_RESERVA, [__CLASS__, 'save_reserva_metabox'], 10, 2);
         }
@@ -184,9 +181,11 @@ final class UDPAQUETES_Reserva {
         update_post_meta($reserva_id, self::META_RESERVA_PRECIO_OPCION, sanitize_text_field($selected['label'] ?? ''));
         update_post_meta($reserva_id, self::META_RESERVA_MONEDA, sanitize_text_field($selected['currency'] ?? 'USD'));
         update_post_meta($reserva_id, self::META_RESERVA_PRECIO_TOTAL, floatval($selected['price'] ?? 0));
-        update_post_meta($reserva_id, self::META_RESERVA_FECHA, current_time('mysql'));
+        $fecha_reserva = current_time('mysql');
+        update_post_meta($reserva_id, self::META_RESERVA_FECHA, $fecha_reserva);
         update_post_meta($reserva_id, self::META_RESERVA_STATUS, self::STATUS_PENDING);
         update_post_meta($reserva_id, self::META_RESERVA_MP_URL, esc_url_raw($selected['mp_url'] ?? ''));
+        self::sync_travel_date_order_meta($reserva_id, $fecha_reserva);
 
         // Emails
         self::send_emails($reserva_id, $paquete_id, $form_data, $selected);
@@ -347,120 +346,21 @@ final class UDPAQUETES_Reserva {
     }
 
 
-    /* =====================================================
-     * Admin UI (ud_reserva)
-     * ===================================================== */
-
-    public static function admin_columns(array $columns): array {
-        // Orden de columnas
-        $new = [];
-        $new['cb'] = $columns['cb'] ?? '';
-        $new['title'] = __('Reserva', 'ud-paquetes');
-        $new['udpq_paquete'] = __('Paquete', 'ud-paquetes');
-        $new['udpq_cliente'] = __('Cliente', 'ud-paquetes');
-        $new['udpq_email'] = __('Email', 'ud-paquetes');
-        $new['udpq_telefono'] = __('Teléfono', 'ud-paquetes');
-        $new['udpq_opcion'] = __('Opción', 'ud-paquetes');
-        $new['udpq_precio'] = __('Precio', 'ud-paquetes');
-        $new['udpq_status'] = __('Estado', 'ud-paquetes');
-        $new['date'] = $columns['date'] ?? __('Fecha', 'ud-paquetes');
-        return $new;
-    }
-
-    public static function admin_column_content(string $column, int $post_id): void {
-        switch ($column) {
-            case 'udpq_paquete':
-                $pid = intval(get_post_meta($post_id, self::META_RESERVA_PAQUETE_ID, true));
-                if ($pid) {
-                    echo '<a href="' . esc_url(get_edit_post_link($pid)) . '">' . esc_html(get_the_title($pid)) . '</a>';
-                } else {
-                    echo '—';
-                }
-                break;
-            case 'udpq_cliente':
-                echo esc_html(get_post_meta($post_id, self::META_RESERVA_NOMBRE, true));
-                break;
-            case 'udpq_email':
-                $email = sanitize_email(get_post_meta($post_id, self::META_RESERVA_EMAIL, true));
-                echo $email ? '<a href="mailto:' . esc_attr($email) . '">' . esc_html($email) . '</a>' : '—';
-                break;
-            case 'udpq_telefono':
-                echo esc_html(get_post_meta($post_id, self::META_RESERVA_TELEFONO, true));
-                break;
-            case 'udpq_opcion':
-                echo esc_html(get_post_meta($post_id, self::META_RESERVA_PRECIO_OPCION, true));
-                break;
-            case 'udpq_precio':
-                $cur = get_post_meta($post_id, self::META_RESERVA_MONEDA, true);
-                $tot = floatval(get_post_meta($post_id, self::META_RESERVA_PRECIO_TOTAL, true));
-                if ($tot > 0) {
-                    echo esc_html(($cur ? $cur : 'USD') . ' ' . number_format($tot, 0, ',', '.'));
-                } else {
-                    echo '—';
-                }
-                break;
-            case 'udpq_status':
-                $status = (string) get_post_meta($post_id, self::META_RESERVA_STATUS, true);
-                echo esc_html(self::get_status_label($status));
-                break;
-        }
-    }
-
-    public static function admin_row_actions(array $actions, \WP_Post $post): array {
-        if ($post->post_type !== UDPAQUETES_CPT::POST_TYPE_RESERVA) return $actions;
-        if (!current_user_can('edit_post', $post->ID)) return $actions;
-
-        $status = (string) get_post_meta($post->ID, self::META_RESERVA_STATUS, true);
-        $base_url = admin_url('admin-post.php');
-
-        $make = function(string $new_status, string $label) use ($base_url, $post) {
-            $url = add_query_arg([
-                'action' => 'udpq_reserva_set_status',
-                'reserva_id' => $post->ID,
-                'status' => $new_status,
-                '_wpnonce' => wp_create_nonce('udpq_reserva_set_status_' . $post->ID),
-            ], $base_url);
-            return '<a href="' . esc_url($url) . '">' . esc_html($label) . '</a>';
-        };
-
-        // Acciones rápidas (simples)
-        $quick = [];
-        if ($status !== self::STATUS_CONFIRMED) {
-            $quick['udpq_confirm'] = $make(self::STATUS_CONFIRMED, __('Confirmar', 'ud-paquetes'));
-        }
-        if ($status !== self::STATUS_CANCELLED) {
-            $quick['udpq_cancel']  = $make(self::STATUS_CANCELLED, __('Cancelar', 'ud-paquetes'));
+    public static function sync_travel_date_order_meta(int $post_id, string $fecha = ''): void {
+        $raw = $fecha ? $fecha : (string) get_post_meta($post_id, self::META_RESERVA_FECHA, true);
+        if (!$raw) {
+            delete_post_meta($post_id, self::META_RESERVA_FECHA_ORD);
+            return;
         }
 
-        // Insertarlas al principio
-        return $quick + $actions;
-    }
-
-    public static function handle_admin_set_status(): void {
-        $reserva_id = isset($_GET['reserva_id']) ? intval($_GET['reserva_id']) : 0;
-        $status = isset($_GET['status']) ? sanitize_text_field((string) $_GET['status']) : '';
-
-        if (!$reserva_id || get_post_type($reserva_id) !== UDPAQUETES_CPT::POST_TYPE_RESERVA) {
-            wp_die(__('Reserva inválida.', 'ud-paquetes'));
-        }
-        if (!current_user_can('edit_post', $reserva_id)) {
-            wp_die(__('No tenés permisos para editar esta reserva.', 'ud-paquetes'));
-        }
-        check_admin_referer('udpq_reserva_set_status_' . $reserva_id);
-
-        $allowed = array_keys(self::get_status_options());
-        if (!in_array($status, $allowed, true)) {
-            wp_die(__('Estado inválido.', 'ud-paquetes'));
+        $timestamp = strtotime($raw);
+        if (!$timestamp) {
+            delete_post_meta($post_id, self::META_RESERVA_FECHA_ORD);
+            return;
         }
 
-        update_post_meta($reserva_id, self::META_RESERVA_STATUS, $status);
-
-        $redirect = wp_get_referer();
-        if (!$redirect) {
-            $redirect = admin_url('edit.php?post_type=' . UDPAQUETES_CPT::POST_TYPE_RESERVA);
-        }
-        wp_safe_redirect($redirect);
-        exit;
+        $ymd = gmdate('Ymd', $timestamp);
+        update_post_meta($post_id, self::META_RESERVA_FECHA_ORD, $ymd);
     }
 
     public static function add_meta_boxes(): void {
@@ -539,9 +439,11 @@ final class UDPAQUETES_Reserva {
                 update_post_meta($post_id, self::META_RESERVA_STATUS, $status);
             }
         }
+
+        self::sync_travel_date_order_meta($post_id);
     }
 
-    private static function get_status_options(): array {
+    public static function get_status_options(): array {
         return [
             self::STATUS_PENDING   => __('Pendiente', 'ud-paquetes'),
             self::STATUS_CONFIRMED => __('Confirmada', 'ud-paquetes'),
@@ -550,10 +452,9 @@ final class UDPAQUETES_Reserva {
         ];
     }
 
-    private static function get_status_label(string $status): string {
+    public static function get_status_label(string $status): string {
         $opts = self::get_status_options();
         return $opts[$status] ?? __('Pendiente', 'ud-paquetes');
     }
 
 }
-

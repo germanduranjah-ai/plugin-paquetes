@@ -5,6 +5,7 @@ require_once UDPQ_PATH . 'includes/class-udpaquetes-cpt.php';
 require_once UDPQ_PATH . 'includes/class-udpaquetes-metaboxes.php';
 require_once UDPQ_PATH . 'includes/class-udpaquetes-shortcodes.php';
 require_once UDPQ_PATH . 'includes/class-udpaquetes-reserva.php';
+require_once UDPQ_PATH . 'includes/admin/class-udpaquetes-reserva-admin.php';
 require_once UDPQ_PATH . 'includes/class-udpaquetes-template.php';
 require_once UDPQ_PATH . 'includes/class-udpaquetes-importer.php';
 
@@ -17,6 +18,8 @@ final class UDPAQUETES_Plugin {
         // Admin metaboxes
         if (is_admin()) {
             UDPAQUETES_Metaboxes::init();
+            UDPAQUETES_CPT::register_admin_filters();
+            UDPAQUETES_Reserva_Admin::init();
         }
 
         // Front shortcodes + assets
@@ -389,4 +392,3 @@ final class UDPAQUETES_Plugin {
     }
 
 }
-
